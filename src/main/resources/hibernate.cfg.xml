@@ -10,7 +10,7 @@
         <property name="connection.url">jdbc:mysql://localhost:3306/shopmarket?serverTimezone=UTC&amp;useUnicode=true&amp;characterEncoding=utf8</property>
         <property name="connection.username">root</property>
         <property name="connection.password"></property>
-      <!-- JDBC connection pool (use the built-in) -->
+        <!-- JDBC connection pool (use the built-in) -->
         <property name="connection.pool_size">4</property>    
         <!-- Enable Hibernate's automatic session context management -->
         <property name="current_session_context_class">thread</property>
@@ -19,7 +19,8 @@
         <!-- Show all executed SQL to console -->
         <property name="show_sql">true</property>
         <!-- Entity mapping -->
-        <!-- <mapping class="demopl.DAL.Course" /> -->
-        <mapping resource = "Department.hbm.xml"/>
+        <mapping class = "Entity.Customers"/>
+        <mapping class = "Entity.Category"/>
+
     </session-factory>
 </hibernate-configuration>
