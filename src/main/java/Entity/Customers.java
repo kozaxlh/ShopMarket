@@ -4,42 +4,139 @@
  */
 package Entity;
 
+import java.io.Serializable;
 import java.util.List;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import lombok.Data;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Admin
  */
-@Data
 @Entity
-@Table(name = "Customers")
-public class Customers {
+@Table(name = "customers")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "Customers.findAll", query = "SELECT c FROM Customers c"),
+    @NamedQuery(name = "Customers.findByCustomerID", query = "SELECT c FROM Customers c WHERE c.customerID = :customerID"),
+    @NamedQuery(name = "Customers.findByPassword", query = "SELECT c FROM Customers c WHERE c.password = :password"),
+    @NamedQuery(name = "Customers.findByFullname", query = "SELECT c FROM Customers c WHERE c.fullname = :fullname"),
+    @NamedQuery(name = "Customers.findByAddress", query = "SELECT c FROM Customers c WHERE c.address = :address"),
+    @NamedQuery(name = "Customers.findByCity", query = "SELECT c FROM Customers c WHERE c.city = :city")})
+public class Customers implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int CustomerID;
+    @Basic(optional = false)
+    @Column(name = "CustomerID")
+    private Integer customerID;
+    @Basic(optional = false)
+    @Column(name = "Password")
+    private String password;
+    @Basic(optional = false)
+    @Column(name = "Fullname")
+    private String fullname;
+    @Column(name = "Address")
+    private String address;
+    @Column(name = "City")
+    private String city;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerID")
+    private List<Order> order1List;
 
-    @Column
-    private String Password;
+    public Customers() {
+    }
 
-    @Column
-    private String FullName;
+    public Customers(Integer customerID) {
+        this.customerID = customerID;
+    }
 
-    @Column
-    private String Address;
+    public Customers(Integer customerID, String password, String fullname) {
+        this.customerID = customerID;
+        this.password = password;
+        this.fullname = fullname;
+    }
 
-    @Column
-    private String City;
-    
-    @OneToMany (mappedBy = "Customers")
-    private List<Order> listOrder;
+    public Integer getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(Integer customerID) {
+        this.customerID = customerID;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    @XmlTransient
+    public List<Order> getOrder1List() {
+        return order1List;
+    }
+
+    public void setOrder1List(List<Order> order1List) {
+        this.order1List = order1List;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (customerID != null ? customerID.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Customers)) {
+            return false;
+        }
+        Customers other = (Customers) object;
+        if ((this.customerID == null && other.customerID != null) || (this.customerID != null && !this.customerID.equals(other.customerID))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Entity.Customers[ customerID=" + customerID + " ]";
+    }
     
 }
