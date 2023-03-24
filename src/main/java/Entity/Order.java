@@ -4,57 +4,148 @@
  */
 package Entity;
 
-import java.sql.Date;
-import java.util.Set;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import lombok.Data;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Admin
  */
-@Data
 @Entity
-@Table(name = "Category")
-public class Order {
+@Table(name = "Shopmarket.Order")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "Shopmarket.Order.findAll", query = "SELECT o FROM Order o"),
+    @NamedQuery(name = "Shopmarket.Order.findByOrderID", query = "SELECT o FROM Order o WHERE o.orderID = :orderID"),
+    @NamedQuery(name = "Shopmarket.Order.findByDate", query = "SELECT o FROM Order o WHERE o.date = :date"),
+    @NamedQuery(name = "Shopmarket.Order.findByTotal", query = "SELECT o FROM Order o WHERE o.total = :total")})
+public class Order implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int OrderID  ;
+    @Basic(optional = false)
+    @Column(name = "OrderID")
+    private Integer orderID;
+    @Basic(optional = false)
+    @Column(name = "Date")
+    @Temporal(TemporalType.DATE)
+    private Date date;
+    @Basic(optional = false)
+    @Column(name = "Total")
+    private float total;
+    @Basic(optional = false)
+    @Lob
+    @Column(name = "Note")
+    private String note;
+    @JoinColumn(name = "CustomerID", referencedColumnName = "CustomerID")
+    @ManyToOne(optional = false)
+    private Customers customerID;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order1")
+    private List<OrderDetail> orderdetailList;
 
-    @Column
-    private Date Date;
+    public Order() {
+    }
 
-    @Column
-    private String Note;
-    
-    @Column
-    private float Total;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CustomerID")
-    private Customers customer;
-    
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-        name = "OrderDetail",
-        joinColumns = {
-            @JoinColumn(name = "OrderID", nullable = false)
-        },
-        inverseJoinColumns = {
-            @JoinColumn(name = "VegetableID", nullable = false)
+    public Order(Integer orderID) {
+        this.orderID = orderID;
+    }
+
+    public Order(Integer orderID, Date date, float total, String note) {
+        this.orderID = orderID;
+        this.date = date;
+        this.total = total;
+        this.note = note;
+    }
+
+    public Integer getOrderID() {
+        return orderID;
+    }
+
+    public void setOrderID(Integer orderID) {
+        this.orderID = orderID;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public float getTotal() {
+        return total;
+    }
+
+    public void setTotal(float total) {
+        this.total = total;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Customers getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(Customers customerID) {
+        this.customerID = customerID;
+    }
+
+    @XmlTransient
+    public List<OrderDetail> getOrderdetailList() {
+        return orderdetailList;
+    }
+
+    public void setOrderdetailList(List<OrderDetail> orderdetailList) {
+        this.orderdetailList = orderdetailList;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (orderID != null ? orderID.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Order)) {
+            return false;
         }
-    )
-    private Set<Vegetable> vegetableList;
+        Order other = (Order) object;
+        if ((this.orderID == null && other.orderID != null) || (this.orderID != null && !this.orderID.equals(other.orderID))) {
+            return false;
+        }
+        return true;
+    }
 
+    @Override
+    public String toString() {
+        return "Entity.Order1[ orderID=" + orderID + " ]";
+    }
+    
 }
