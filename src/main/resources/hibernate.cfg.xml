@@ -23,5 +23,6 @@
         <mapping class = "Entity.Category"/>
         <mapping class = "Entity.Vegetable"/>
         <mapping class = "Entity.Order"/>
+        <mapping class = "Entity.OrderDetail"/>
     </session-factory>
 </hibernate-configuration>
