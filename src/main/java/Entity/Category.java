@@ -5,14 +5,17 @@
 package Entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -32,6 +35,7 @@ public class Category implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "CatagoryID")
     private Integer catagoryID;
@@ -40,9 +44,9 @@ public class Category implements Serializable {
     private String name;
     @Column(name = "Description")
     private String description;
-    @JoinColumn(name = "CatagoryID", referencedColumnName = "CatagoryID", insertable = false, updatable = false)
-    @OneToOne(optional = false)
-    private Vegetable vegetable;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
+    private List<Vegetable> vegetable;
 
     public Category() {
     }
@@ -80,11 +84,11 @@ public class Category implements Serializable {
         this.description = description;
     }
 
-    public Vegetable getVegetable() {
+    public List<Vegetable> getVegetable() {
         return vegetable;
     }
 
-    public void setVegetable(Vegetable vegetable) {
+    public void setVegetable(List<Vegetable> vegetable) {
         this.vegetable = vegetable;
     }
 
