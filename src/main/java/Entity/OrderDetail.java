@@ -50,7 +50,7 @@ public class OrderDetail implements Serializable {
     
     @JoinColumn(name = "OrderID", referencedColumnName = "OrderID", insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private Order order1;
+    private Order order;
 
     public OrderDetail() {
     }
@@ -101,12 +101,12 @@ public class OrderDetail implements Serializable {
         this.vegetable = vegetable;
     }
 
-    public Order getOrder1() {
-        return order1;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setOrder1(Order order1) {
-        this.order1 = order1;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     @Override

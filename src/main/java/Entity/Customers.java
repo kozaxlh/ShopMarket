@@ -10,6 +10,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -36,6 +38,7 @@ public class Customers implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "CustomerID")
     private Integer customerID;
@@ -49,8 +52,8 @@ public class Customers implements Serializable {
     private String address;
     @Column(name = "City")
     private String city;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerID")
-    private List<Order> order1List;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+    private List<Order> orderList;
 
     public Customers() {
     }
@@ -107,11 +110,11 @@ public class Customers implements Serializable {
 
     @XmlTransient
     public List<Order> getOrder1List() {
-        return order1List;
+        return orderList;
     }
 
-    public void setOrder1List(List<Order> order1List) {
-        this.order1List = order1List;
+    public void setOrder1List(List<Order> orderList) {
+        this.orderList = orderList;
     }
 
     @Override
