@@ -48,11 +48,11 @@ public class OrderDAL {
         return order;
     }
 
-    public List getVegetableRevenueByDay(Calendar date) {
+    public List getVegetableRevenue(Calendar date) {
         List list;
 
         session.beginTransaction();
-        String hql = "SELECT new POJO.VegetableRevenue(OD.vegetable.vegetableName, sum(OD.price)) "
+        String hql = "SELECT new POJO.VegetableRevenue(OD.vegetable.vegetableName, sum(OD.quantity), sum(OD.price)) "
                 + "FROM OrderDetail OD "
                 + "WHERE year(OD.order.date) = :year AND month(OD.order.date) = :month AND day(OD.order.date) = :day "
                 + "GROUP BY OD.vegetable.vegetableID ";
@@ -61,6 +61,20 @@ public class OrderDAL {
         query.setParameter("year", date.get(Calendar.YEAR));
         query.setParameter("month", date.get(Calendar.MONTH) + 1);
         query.setParameter("day", date.get(Calendar.DATE));
+
+        list = query.list();
+
+        return list;
+    }
+    
+    public List getVegetableRevenue() {
+        List list;
+
+        session.beginTransaction();
+        String hql = "SELECT new POJO.VegetableRevenue(OD.vegetable.vegetableName, sum(OD.quantity), sum(OD.price)) "
+                + "FROM OrderDetail OD "
+                + "GROUP BY OD.vegetable.vegetableID ";
+        Query query = session.createQuery(hql);
 
         list = query.list();
 
@@ -112,7 +126,7 @@ public class OrderDAL {
 
         calendar.setTime(order.getDate());
 
-        List list = dal.getVegetableRevenueByDay(calendar);
+        List list = dal.getVegetableRevenue(calendar);
         for (var item : list) {
             System.out.println(item);
         }
