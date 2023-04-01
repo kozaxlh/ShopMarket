@@ -15,6 +15,7 @@ import lombok.Data;
 public class VegetableRevenue {
 
     private String vegetableName;
+    private long quantity;
     private float price;
 
     public VegetableRevenue() {
@@ -27,7 +28,15 @@ public class VegetableRevenue {
 
     public VegetableRevenue(String vegetableName, double price) {
         this.vegetableName = vegetableName;
-        this.price = (float)price;
+        this.price = (float) price;
     }
+
+    public VegetableRevenue(String vegetableName, long quantity, double price) {
+        this.vegetableName = vegetableName;
+        this.quantity = quantity;
+        this.price = (float) price;
+    }
+    
+    
 
 }
