@@ -47,15 +47,22 @@ public class VegetableDAL {
     }
 
     public void addVegetable(Vegetable vegetable) {
+        session.beginTransaction();
         session.save(vegetable);
+        session.getTransaction().commit();
     }
 
     public void updateVegetable(Vegetable vegetable) {
+        session.beginTransaction();
         session.update(vegetable);
+        session.getTransaction().commit();
     }
 
     public void deleteVegetable(Vegetable vegetable) {
+        session.beginTransaction();
         session.delete(vegetable);
+        session.getTransaction().commit();
+
     }
-    
+
 }
