@@ -7,6 +7,8 @@ package BLL;
 import DAL.OrderDAL;
 import Entity.Order;
 import Entity.OrderDetail;
+import POJO.VegetableRevenue;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -45,6 +47,30 @@ public class OrderBLL {
             obj[i][2] = list.get(i).getVegetable().getUnit();
             obj[i][3] = list.get(i).getVegetable().getPrice();
             obj[i][4] = list.get(i).getPrice();
+        }
+        return obj;
+    }
+    
+    public Object[][] convertVegetableRevenue(Calendar date) {
+        List<VegetableRevenue> list = orderDAL.getVegetableRevenue(date);
+        
+        return getObjectVegetableRevenue(list);
+    }
+    
+    public Object[][] convertVegetableRevenue() {
+        List<VegetableRevenue> list = orderDAL.getVegetableRevenue();
+        
+        return getObjectVegetableRevenue(list);
+    }
+    
+    private Object[][] getObjectVegetableRevenue(List<VegetableRevenue> list) {
+        int rows = list.size();
+        int cols = 3;
+        Object[][] obj = new Object[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            obj[i][0] = list.get(i).getVegetableName();
+            obj[i][1] = list.get(i).getQuantity();
+            obj[i][2] = list.get(i).getPrice();
         }
         return obj;
     }
