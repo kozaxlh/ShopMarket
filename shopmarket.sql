@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 03, 2023 at 05:39 AM
+-- Generation Time: Apr 03, 2023 at 08:11 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -64,7 +64,8 @@ INSERT INTO `customers` (`CustomerID`, `Password`, `Fullname`, `Address`, `City`
 (1, 'Abcd1234', 'John Smith', '30 Broadway', 'London'),
 (2, 'Abcd1234', 'Jonny English', '99 River View', 'Reading'),
 (3, 'Abcd1234', 'Elizabeth', '23 Buckinghamshire', 'York'),
-(4, 'Abcd1234', 'Beatrix', '66 Royal Crescent', 'Bath');
+(4, 'Abcd1234', 'Beatrix', '66 Royal Crescent', 'Bath'),
+(8, '2354', 'kozax5', 'abc', 'bb');
 
 -- --------------------------------------------------------
 
@@ -88,7 +89,8 @@ INSERT INTO `order` (`OrderID`, `CustomerID`, `Date`, `Total`, `Note`) VALUES
 (1, 1, '2021-08-15', 150000, 'Use environmental protection bags'),
 (2, 2, '2021-08-16', 235000, 'Hello'),
 (3, 3, '2021-08-16', 65000, 'Need fast delivery'),
-(4, 3, '2021-08-17', 80000, '');
+(4, 3, '2021-08-17', 80000, ''),
+(13, 1, '2023-06-23', 0, 'Hello');
 
 -- --------------------------------------------------------
 
@@ -190,33 +192,51 @@ ALTER TABLE `vegetable`
 --
 
 --
+-- AUTO_INCREMENT for table `category`
+--
+ALTER TABLE `category`
+  MODIFY `CatagoryID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `customers`
+--
+ALTER TABLE `customers`
+  MODIFY `CustomerID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- AUTO_INCREMENT for table `order`
 --
 ALTER TABLE `order`
-  MODIFY `OrderID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `OrderID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `vegetable`
+--
+ALTER TABLE `vegetable`
+  MODIFY `VegetableID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `category`
---
-ALTER TABLE `category`
-  ADD CONSTRAINT `category_ibfk_1` FOREIGN KEY (`CatagoryID`) REFERENCES `vegetable` (`CatagoryID`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
 -- Constraints for table `order`
 --
 ALTER TABLE `order`
-  ADD CONSTRAINT `order_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `customers` (`CustomerID`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `order_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `customers` (`CustomerID`);
 
 --
 -- Constraints for table `orderdetail`
 --
 ALTER TABLE `orderdetail`
-  ADD CONSTRAINT `orderdetail_ibfk_1` FOREIGN KEY (`VegetableID`) REFERENCES `vegetable` (`VegetableID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `orderdetail_ibfk_2` FOREIGN KEY (`OrderID`) REFERENCES `order` (`OrderID`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `orderdetail_ibfk_2` FOREIGN KEY (`OrderID`) REFERENCES `order` (`OrderID`),
+  ADD CONSTRAINT `orderdetail_ibfk_3` FOREIGN KEY (`VegetableID`) REFERENCES `vegetable` (`VegetableID`);
+
+--
+-- Constraints for table `vegetable`
+--
+ALTER TABLE `vegetable`
+  ADD CONSTRAINT `vegetable_ibfk_1` FOREIGN KEY (`CatagoryID`) REFERENCES `category` (`CatagoryID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
