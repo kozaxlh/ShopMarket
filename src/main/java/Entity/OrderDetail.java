@@ -68,6 +68,12 @@ public class OrderDetail implements Serializable {
     public OrderDetail(int orderID, int vegetableID) {
         this.orderdetailPK = new OrderdetailPK(orderID, vegetableID);
     }
+    
+    public OrderDetail(int orderID, int vegetableID, short quantity, float price) {
+        this.orderdetailPK = new OrderdetailPK(orderID, vegetableID);
+        this.quantity = quantity;
+        this.price = price;
+    }
 
     public OrderdetailPK getOrderdetailPK() {
         return orderdetailPK;

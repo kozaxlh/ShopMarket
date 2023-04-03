@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.GUI;
+package GUI;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -133,8 +133,5 @@ public class MenuScreen extends JFrame{
         pnlContent.add(ThisPanel);
         pnlContent.revalidate();
         pnlContent.repaint();
-    }
-    public static void main(String[] args) {
-        MenuScreen m = new MenuScreen();
     }
 }

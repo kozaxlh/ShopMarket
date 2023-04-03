@@ -19,15 +19,20 @@ public class CustomersBLL {
         customerDAL = new CustomersDAL();
     }
     
+    public List<Customers> loadCustomers() {
+        return customerDAL.getCustomers();
+    }
+    
     public Object[][] convertList(List<Customers> list) {
         int rows = list.size();
-        int cols = 4;
+        int cols = 5;
         Object[][] obj = new Object[rows][cols];
         for (int i = 0; i < rows; i++) {
             obj[i][0] = list.get(i).getCustomerID();
             obj[i][1] = list.get(i).getFullname();
-            obj[i][2] = list.get(i).getAddress();
-            obj[i][3] = list.get(i).getCity();
+            obj[i][2] = list.get(i).getPassword();
+            obj[i][3] = list.get(i).getAddress();
+            obj[i][4] = list.get(i).getCity();
         }
         return obj;
     }
