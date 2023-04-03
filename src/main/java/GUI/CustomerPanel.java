@@ -2,14 +2,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.GUI;
+package GUI;
 
+import BLL.CustomersBLL;
+import Entity.Customers;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -25,9 +28,13 @@ public class CustomerPanel extends JPanel{
     JButton btnAdd, btnClear, btnDelete, btnEdit, btnSearch;
     JScrollPane pnlTable;
     DefaultTableModel tableModel;
-    MenuScreen menu; 
+    MenuScreen menu;
+    CustomersBLL customerBLL;
+    List<Customers> customerList;
     public CustomerPanel(){
         super();
+        customerBLL = new CustomersBLL();
+        customerList = customerBLL.loadCustomers();
         GUI();
         Show();
     }
@@ -43,19 +50,19 @@ public class CustomerPanel extends JPanel{
             labCustomer.setFont(new Font( "Jaldi" , Font.BOLD , 20 ));
         
         labCustomerID = new JLabel("Customer ID");
-            labCustomerID.setForeground(Color.black);
-            labCustomerID.setBounds( 50 , 40 , 240 , 30 );
-            labCustomerID.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
+//            labCustomerID.setForeground(Color.black);
+//            labCustomerID.setBounds( 50 , 40 , 240 , 30 );
+//            labCustomerID.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
         
-        labPassword = new JLabel("Password");
-            labPassword.setForeground(Color.black);
-            labPassword.setBounds( 50 , 120 , 240 , 30 );
-            labPassword.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));  
-            
         labFullName= new JLabel("Full Name");
             labFullName.setForeground(Color.black);
-            labFullName.setBounds( 50 , 200 , 240 , 30 );
+            labFullName.setBounds( 50 , 120 , 240 , 30 );
             labFullName.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
+            
+        labPassword = new JLabel("Password");
+            labPassword.setForeground(Color.black);
+            labPassword.setBounds( 50 , 200 , 240 , 30 );
+            labPassword.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));  
             
         labAddress = new JLabel("Address");
             labAddress.setForeground(Color.black);
@@ -68,19 +75,19 @@ public class CustomerPanel extends JPanel{
             labCity.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
             
         txtCustomerID = new JTextField();
-            txtCustomerID.setBounds( 55 , 70 , 285 , 40 );
-            txtCustomerID.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
-            txtCustomerID.setForeground(Color.black);
-            
-        txtPassword = new JTextField();
-            txtPassword.setBounds( 55 , 150 , 285 , 40 );
-            txtPassword.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
-            txtPassword.setBackground(Color.white);
+//            txtCustomerID.setBounds( 55 , 70 , 285 , 40 );
+//            txtCustomerID.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
+//            txtCustomerID.setForeground(Color.black);
             
         txtFullName = new JTextField();
-            txtFullName.setBounds( 55 , 230 , 285 , 40 );
+            txtFullName.setBounds( 55 , 150 , 285 , 40 );
             txtFullName.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
             txtFullName.setForeground(Color.black);
+            
+        txtPassword = new JTextField();
+            txtPassword.setBounds( 55 , 230 , 285 , 40 );
+            txtPassword.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
+            txtPassword.setBackground(Color.white);
             
         txtAddress = new JTextField();
             txtAddress.setBounds( 55 , 310 , 285 , 40 );
@@ -137,7 +144,7 @@ public class CustomerPanel extends JPanel{
             btnClear.setBounds( 690 , 5 , 100 , 29 );
             btnClear.setFont(new Font( "Jaldi" , Font.BOLD ,20 ));
         
-        tableModel = new DefaultTableModel(new Object[] { "Customer ID", "Password", "Full Name" , "Address" , "City" }, 0);    
+        tableModel = new DefaultTableModel(new Object[] { "Customer ID", "Full Name", "Password" , "Address" , "City" }, 0);    
             
         tabCustomer = new JTable(tableModel);
             tabCustomer.setBackground(Color.white);
@@ -172,8 +179,8 @@ public class CustomerPanel extends JPanel{
                     int row = tabCustomer.getSelectedRow();
                     if (row >= 0 ){
                     txtCustomerID.setText(Integer.toString((int) tabCustomer.getValueAt(row,0)));
-                    txtPassword.setText((String)tabCustomer.getValueAt(row, 1));
-                    txtFullName.setText((String)tabCustomer.getValueAt(row,2));
+                    txtFullName.setText((String)tabCustomer.getValueAt(row,1));
+                    txtPassword.setText((String)tabCustomer.getValueAt(row, 2));
                     txtAddress.setText((String)tabCustomer.getValueAt(row,3));
                     txtCity.setText((String)tabCustomer.getValueAt(row,4));
                     }
@@ -187,17 +194,25 @@ public class CustomerPanel extends JPanel{
                             return;
                         }
                         StringBuilder sb = new StringBuilder();
-                        DataValidator.validateTextEmpty(txtCustomerID, sb, "Please enter ID" );
-                        DataValidator.validateTextEmpty(txtPassword, sb, "Please enter Username" );
-                        DataValidator.validateTextEmpty(txtFullName, sb, "Please enter Password" );
-                        DataValidator.validateTextEmpty(txtAddress, sb, "Please enter Address" );
-                        DataValidator.validateTextEmpty(txtCity, sb, "Please enter City" );
+//                        DataValidator.validateTextEmpty(txtCustomerID, sb, "Please enter ID" );
+                        DataValidator.validateTextEmpty(txtPassword, sb, "Please enter Password" );
+                        DataValidator.validateTextEmpty(txtFullName, sb, "Please enter Fullname" );
+//                        DataValidator.validateTextEmpty(txtAddress, sb, "Please enter Address" );
+//                        DataValidator.validateTextEmpty(txtCity, sb, "Please enter City" );
                         if (sb.length() > 0){
                             JOptionPane.showMessageDialog(menu, sb.toString() , "Information is missing!",  JOptionPane.INFORMATION_MESSAGE);
                             return;
                         }
                         
                         //add code here
+                        Customers customer = new Customers();
+                            customer.setFullname(txtFullName.getText());
+                            customer.setPassword(txtPassword.getText());
+                            customer.setAddress(txtAddress.getText());
+                            customer.setCity(txtCity.getText());
+                        
+                        customerBLL.addCustomer(customer);
+                        customerList.add(customer);
                         
                         JOptionPane.showMessageDialog(menu, "Customer added successfully!" , "Done!",  JOptionPane.INFORMATION_MESSAGE);
                         Clear();
@@ -219,6 +234,10 @@ public class CustomerPanel extends JPanel{
                         }
                         
                         //add code here
+                        int index = customerList.indexOf(new Customers(Integer.parseInt(txtCustomerID.getText())));
+                        Customers customer = customerList.get(index);
+                        customerBLL.deleteCustomer(customer);
+                        customerList.remove(customer);
                         
                         JOptionPane.showMessageDialog(menu, "Customer deleted successfully!" , "Done!",  JOptionPane.INFORMATION_MESSAGE);
                         Clear();
@@ -237,18 +256,24 @@ public class CustomerPanel extends JPanel{
                         DataValidator.validateTextEmpty(txtCustomerID, sb, "Please choose account!" );
                         DataValidator.validateTextEmpty(txtPassword, sb, "Please enter Username" );
                         DataValidator.validateTextEmpty(txtFullName, sb, "Please enter Password" );
-                        DataValidator.validateTextEmpty(txtAddress, sb, "Please enter Address" );
-                        DataValidator.validateTextEmpty(txtCity, sb, "Please enter City" );
+//                        DataValidator.validateTextEmpty(txtAddress, sb, "Please enter Address" );
+//                        DataValidator.validateTextEmpty(txtCity, sb, "Please enter City" );
                         if (sb.length() > 0){
                             JOptionPane.showMessageDialog(menu, sb.toString() , "Information is missing!",  JOptionPane.INFORMATION_MESSAGE);
                             return;
                         }
-                        ReturnWhite();
-                        if ( JOptionPane.showConfirmDialog(menu,"Do you want to change the information?","Confirm",JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION){
-                            return;
-                        }
                         
                         //add code here
+                        int index = customerList.indexOf(new Customers(Integer.parseInt(txtCustomerID.getText())));
+                        
+                        Customers customer = customerList.get(index);
+                            customer.setFullname(txtFullName.getText());
+                            customer.setPassword(txtPassword.getText());
+                            customer.setAddress(txtAddress.getText());
+                            customer.setCity(txtCity.getText());
+                        System.out.println(customer);
+                        customerBLL.updateCustomer(customer);
+                        customerList.set(index, customer);
                         
                         JOptionPane.showMessageDialog(menu, "Account edited successfully!" , "Done!",  JOptionPane.INFORMATION_MESSAGE);    
                         Clear();
@@ -280,6 +305,12 @@ public class CustomerPanel extends JPanel{
         txtCity.setBackground(Color.WHITE);
     }
     public void Show(){
-    
+        Object[][] table = customerBLL.convertList(customerList);
+        tableModel.setRowCount(0);
+        
+        for(int i = 0; i < table.length; i++) {
+            tableModel.addRow(table[i]);
+        }
+        tabCustomer.setModel(tableModel);
     }
 }
