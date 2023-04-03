@@ -79,6 +79,16 @@ public class OrderBLL {
         return orderDAL.getOrder(orderID);
     }
     
+    public void addOrder(Order order, List<OrderDetail> list) {
+        float total = 0;
+        for(var item : list) {
+            total += item.getPrice();
+        }
+        order.setTotal(total);
+        orderDAL.addOrder(order);
+        addOrderDetail(list);
+    }
+    
     public void addOrder(Order order) {
         orderDAL.addOrder(order);
     }
@@ -93,6 +103,11 @@ public class OrderBLL {
     
     public void addOrderDetail(OrderDetail orderDetail) {
         orderDAL.addOrderDetail(orderDetail);
+    }
+    
+    public void addOrderDetail(List<OrderDetail> list) {
+        for(var item : list)
+            orderDAL.addOrderDetail(item);
     }
     
     public void updateOrderDetail(OrderDetail orderDetail) {
