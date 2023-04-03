@@ -52,7 +52,7 @@ public class Customers implements Serializable {
     private String address;
     @Column(name = "City")
     private String city;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "customer")
     private List<Order> orderList;
 
     public Customers() {

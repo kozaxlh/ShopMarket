@@ -76,7 +76,7 @@ public class Vegetable implements Serializable {
     @JoinColumn(name = "CatagoryID" , insertable=false, updatable=false)
     private Category category;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "vegetable")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "vegetable")
     private List<OrderDetail> orderdetailList;
 
     public Vegetable() {
