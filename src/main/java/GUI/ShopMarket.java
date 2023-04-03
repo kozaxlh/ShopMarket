@@ -5,13 +5,14 @@
 
 package GUI;
 
+
 /**
  *
  * @author Admin
  */
 public class ShopMarket {
-
+    
     public static void main(String[] args) {
-        System.out.println("Hello Deadline Team");
+        MenuScreen m = new MenuScreen();
     }
 }
