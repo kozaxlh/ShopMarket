@@ -5,6 +5,7 @@
 package Entity;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -60,7 +61,7 @@ public class Order implements Serializable {
     @JoinColumn(name = "CustomerID", referencedColumnName = "CustomerID")
     @ManyToOne(optional = false)
     private Customers customer;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "order")
     private List<OrderDetail> orderdetailList;
 
     public Order() {
@@ -92,7 +93,11 @@ public class Order implements Serializable {
     public void setDate(Date date) {
         this.date = date;
     }
-
+    
+    public void setDate(Calendar date) {
+        this.date = date.getTime();
+    }
+    
     public float getTotal() {
         return total;
     }
