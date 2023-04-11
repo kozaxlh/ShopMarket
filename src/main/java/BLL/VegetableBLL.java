@@ -20,9 +20,9 @@ public class VegetableBLL {
         vegetableDAL = new VegetableDAL();
     }
 
-    public List<Vegetable> loadVegetable() {
-        return vegetableDAL.getVegetableList();
-    }
+//    public List<Vegetable> loadVegetable() {
+//        return vegetableDAL.getVegetableList();
+//    }
     
     public Object[][] convertList(List<Vegetable> list) {
         int rows = list.size();

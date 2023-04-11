@@ -56,5 +56,4 @@ public class CustomersDAL {
         session.delete(customer);
         session.getTransaction().commit();
     }
-
 }
