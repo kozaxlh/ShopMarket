@@ -34,6 +34,19 @@ public class VegetableDAL {
 
         return vegetableList;
     }
+    
+    public List<Vegetable> getVegetableList() {
+        List<Vegetable> vegetableList;
+
+        session.beginTransaction();
+
+        Query query = session.createQuery("FROM Vegetable");
+
+        vegetableList = query.list();
+        session.getTransaction().commit();
+
+        return vegetableList;
+    }
 
     public Vegetable getVegetable(int VegetableID) {
         Vegetable vegetable;

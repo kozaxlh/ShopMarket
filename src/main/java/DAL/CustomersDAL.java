@@ -32,7 +32,7 @@ public class CustomersDAL {
 
     public Customers getCustomer(int CustomerID) {
         Customers customer;
-        
+
         session.beginTransaction();
         customer = session.get(Customers.class, CustomerID);
         session.getTransaction().commit();

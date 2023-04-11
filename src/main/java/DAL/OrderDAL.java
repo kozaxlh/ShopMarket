@@ -4,10 +4,10 @@
  */
 package DAL;
 
+import Entity.Customers;
 import Entity.Order;
 import Entity.OrderDetail;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -66,7 +66,7 @@ public class OrderDAL {
 
         return list;
     }
-    
+
     public List getVegetableRevenue() {
         List list;
 
@@ -119,16 +119,24 @@ public class OrderDAL {
 
     public static void main(String[] args) {
         OrderDAL dal = new OrderDAL();
+        List<Order> list = dal.getOrderInCustomer(1);
+        
+        list.forEach(System.out::println);
 
-        Order order = dal.getOrder(1);
+        Order order = new Order();
+        Calendar date = Calendar.getInstance();
+        date.set(2023, 5, 23);
 
-        Calendar calendar = Calendar.getInstance();
+        order.setDate(date);
+        order.setCustomerID(new Customers(1));
+        order.setTotal(0);
+        order.setNote("Hello2");
+        
+        list.add(order);
+        dal.addOrder(order);
+        
+        dal.deleteOrder(order);
+        
 
-        calendar.setTime(order.getDate());
-
-        List list = dal.getVegetableRevenue(calendar);
-        for (var item : list) {
-            System.out.println(item);
-        }
     }
 }
