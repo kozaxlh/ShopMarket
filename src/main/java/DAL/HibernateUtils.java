@@ -40,6 +40,7 @@ public class HibernateUtils {
         prop.setProperty(Environment.CACHE_PROVIDER_CONFIG, "org.hibernate.cache.internal.NoCacheProvider");
         prop.setProperty(Environment.SHOW_SQL, "true");
         conf.setProperties(prop);
+        
         conf.addAnnotatedClass(Category.class);
         conf.addAnnotatedClass(Customers.class);
         conf.addAnnotatedClass(Order.class);
