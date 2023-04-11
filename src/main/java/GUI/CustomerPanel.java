@@ -31,6 +31,8 @@ public class CustomerPanel extends JPanel{
     MenuScreen menu;
     CustomersBLL customerBLL;
     List<Customers> customerList;
+    Customers selectedCustomer;
+    int customerIndex;
     public CustomerPanel(){
         super();
         customerBLL = new CustomersBLL();
@@ -50,9 +52,9 @@ public class CustomerPanel extends JPanel{
             labCustomer.setFont(new Font( "Jaldi" , Font.BOLD , 20 ));
         
         labCustomerID = new JLabel("Customer ID");
-//            labCustomerID.setForeground(Color.black);
-//            labCustomerID.setBounds( 50 , 40 , 240 , 30 );
-//            labCustomerID.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
+            labCustomerID.setForeground(Color.black);
+            labCustomerID.setBounds( 50 , 40 , 240 , 30 );
+            labCustomerID.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
         
         labFullName= new JLabel("Full Name");
             labFullName.setForeground(Color.black);
@@ -75,9 +77,10 @@ public class CustomerPanel extends JPanel{
             labCity.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
             
         txtCustomerID = new JTextField();
-//            txtCustomerID.setBounds( 55 , 70 , 285 , 40 );
-//            txtCustomerID.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
-//            txtCustomerID.setForeground(Color.black);
+            txtCustomerID.setBounds( 55 , 70 , 285 , 40 );
+            txtCustomerID.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
+            txtCustomerID.setForeground(Color.black);
+            txtCustomerID.setFocusable(false);
             
         txtFullName = new JTextField();
             txtFullName.setBounds( 55 , 150 , 285 , 40 );
@@ -178,6 +181,9 @@ public class CustomerPanel extends JPanel{
                 public void mouseClicked(MouseEvent evt) {
                     int row = tabCustomer.getSelectedRow();
                     if (row >= 0 ){
+                    customerIndex = customerList.indexOf(new Customers((int) tabCustomer.getValueAt(row,0)));
+                    selectedCustomer = customerList.get(customerIndex);
+                        
                     txtCustomerID.setText(Integer.toString((int) tabCustomer.getValueAt(row,0)));
                     txtFullName.setText((String)tabCustomer.getValueAt(row,1));
                     txtPassword.setText((String)tabCustomer.getValueAt(row, 2));
@@ -234,10 +240,8 @@ public class CustomerPanel extends JPanel{
                         }
                         
                         //add code here
-                        int index = customerList.indexOf(new Customers(Integer.parseInt(txtCustomerID.getText())));
-                        Customers customer = customerList.get(index);
-                        customerBLL.deleteCustomer(customer);
-                        customerList.remove(customer);
+                        customerBLL.deleteCustomer(selectedCustomer);
+                        customerList.remove(selectedCustomer);
                         
                         JOptionPane.showMessageDialog(menu, "Customer deleted successfully!" , "Done!",  JOptionPane.INFORMATION_MESSAGE);
                         Clear();
@@ -264,16 +268,13 @@ public class CustomerPanel extends JPanel{
                         }
                         
                         //add code here
-                        int index = customerList.indexOf(new Customers(Integer.parseInt(txtCustomerID.getText())));
-                        
-                        Customers customer = customerList.get(index);
-                            customer.setFullname(txtFullName.getText());
-                            customer.setPassword(txtPassword.getText());
-                            customer.setAddress(txtAddress.getText());
-                            customer.setCity(txtCity.getText());
-                        System.out.println(customer);
-                        customerBLL.updateCustomer(customer);
-                        customerList.set(index, customer);
+                        selectedCustomer.setFullname(txtFullName.getText());
+                        selectedCustomer.setPassword(txtPassword.getText());
+                        selectedCustomer.setAddress(txtAddress.getText());
+                        selectedCustomer.setCity(txtCity.getText());
+
+                        customerBLL.updateCustomer(selectedCustomer);
+                        customerList.set(customerIndex, selectedCustomer);
                         
                         JOptionPane.showMessageDialog(menu, "Account edited successfully!" , "Done!",  JOptionPane.INFORMATION_MESSAGE);    
                         Clear();
