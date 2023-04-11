@@ -44,6 +44,10 @@ public class CategoryBLL {
     public Category getCategory(int CategoryID) {
         return categoryDAL.getCategory(CategoryID);
     }
+    
+    public Category getCategory(String CategoryName) {
+        return categoryDAL.getCategory(CategoryName);
+    }
 
     public void updateCategory(Category category) {
         categoryDAL.updateCategory(category);
