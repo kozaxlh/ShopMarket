@@ -22,6 +22,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.annotations.ColumnDefault;
 
 /**
  *
@@ -66,6 +67,7 @@ public class Vegetable implements Serializable {
     
     @Basic(optional = false)
     @Column(name = "Image")
+    @ColumnDefault("")
     private String image;
     
     @Basic(optional = false)
