@@ -19,9 +19,10 @@ import javax.swing.*;
 public class MenuScreen extends JFrame{
     JPanel pnlMenu, pnlContent;
     JButton btnStock, btnReceipt, btnCustomer, btnStatistic;
+    JPanel OP = new OrderPanel(this);
     JPanel[] Panel = {
         new StockPanel(),
-        new ReceiptPanel(),
+        OP,
         new CustomerPanel(),
         new StatiѕticPanel()
     };
@@ -106,8 +107,7 @@ public class MenuScreen extends JFrame{
         btnReceipt.addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e){;
-                    JPanel Panel = new ReceiptPanel();
-                    ChangePanel(Panel);
+                    ChangePanel(OP);
                 } 
             });
         
@@ -134,4 +134,7 @@ public class MenuScreen extends JFrame{
         pnlContent.revalidate();
         pnlContent.repaint();
     }
+//    public static void main(String[] args) {
+//        MenuScreen m = new MenuScreen();
+//    }
 }
