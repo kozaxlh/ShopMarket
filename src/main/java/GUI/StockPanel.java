@@ -4,6 +4,10 @@
  */
 package GUI;
 
+import BLL.VegetableBLL;
+import BLL.CategoryBLL;
+import Entity.Category;
+import Entity.Vegetable;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
@@ -12,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -28,8 +33,17 @@ public class StockPanel extends JPanel{
     JScrollPane pnlTable;
     DefaultTableModel tableModel;
     MenuScreen menu; 
+    
+    VegetableBLL vegetableBLL;
+    CategoryBLL categoryBLL;
+    List<Vegetable> vegetableList;
+    Vegetable selectedVegetable;
+    int vegetableIndex;
     public StockPanel(){
         super();
+        vegetableBLL = new VegetableBLL();
+        categoryBLL = new CategoryBLL();
+        vegetableList = vegetableBLL.loadVegetable();
         GUI();
         Show();
     }
@@ -208,17 +222,21 @@ public class StockPanel extends JPanel{
         this.add(btnChooseImage);
         this.add(labVegetableID);
         this.add(txtVegetableID);
+        
         tabStock.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent evt) {
                     int row = tabStock.getSelectedRow();
                     if (row >= 0 ){
+                    vegetableIndex = vegetableList.indexOf(new Vegetable((int) tabStock.getValueAt(row,0)));
+                    selectedVegetable = vegetableList.get(vegetableIndex);
+                    
                     txtVegetableID.setText(Integer.toString((int) tabStock.getValueAt(row,0)));
-                    txtCategoryID.setText(Integer.toString((int) tabStock.getValueAt(row,1)));
+                    txtCategoryID.setText(selectedVegetable.getCategory().getName());
                     txtVegetableName.setText((String)tabStock.getValueAt(row,2));
                     txtUnit.setText((String)tabStock.getValueAt(row,3));
                     txtAmount.setText(Integer.toString((int) tabStock.getValueAt(row,4)));
-                    txtPrice.setText(Integer.toString((int) tabStock.getValueAt(row,5)));
+                    txtPrice.setText(Float.toString((float) tabStock.getValueAt(row,5)));
                     }
                 }    
                 });
@@ -230,7 +248,7 @@ public class StockPanel extends JPanel{
                             return;
                         }
                         StringBuilder sb = new StringBuilder();
-                        DataValidator.validateTextEmpty(txtVegetableID, sb, "Please enter Vegetable ID" );
+//                        DataValidator.validateTextEmpty(txtVegetableID, sb, "Please enter Vegetable ID" );
                         DataValidator.validateTextEmpty(txtCategoryID, sb, "Please enter Category ID" );
                         DataValidator.validateTextEmpty(txtVegetableName, sb, "Please enter Vegetable Name" );
                         DataValidator.validateTextEmpty(txtUnit, sb, "Please enter Unit" );
@@ -242,6 +260,20 @@ public class StockPanel extends JPanel{
                         }
                         
                         //add code here
+                        Category category = categoryBLL.getCategory(txtCategoryID.getText());
+                        
+                        Vegetable vegetable = new Vegetable();
+                            vegetable.setCategory(category);
+                            vegetable.setCatagoryID(category.getCatagoryID());
+                            vegetable.setVegetableName(txtVegetableName.getText());
+                            vegetable.setUnit(txtUnit.getText());
+                            vegetable.setAmount((Integer.parseInt(txtAmount.getText())));
+                            vegetable.setPrice(Float.parseFloat(txtPrice.getText()));
+                            vegetable.setImage(txtURL.getText());
+                            
+                        System.out.println(vegetable.toString());
+                        vegetableList.add(vegetable);
+                        vegetableBLL.addVegetable(vegetable);
                         
                         JOptionPane.showMessageDialog(menu, "Customer added successfully!" , "Done!",  JOptionPane.INFORMATION_MESSAGE);
                         Clear();
@@ -263,6 +295,8 @@ public class StockPanel extends JPanel{
                         }
                         
                         //add code here
+                        vegetableBLL.deleteVegetable(selectedVegetable);
+                        vegetableList.remove(selectedVegetable);
                         
                         JOptionPane.showMessageDialog(menu, "Stock deleted successfully!" , "Done!",  JOptionPane.INFORMATION_MESSAGE);
                         Clear();
@@ -294,6 +328,18 @@ public class StockPanel extends JPanel{
                         }
                         
                         //add code here
+                        Category category = categoryBLL.getCategory(txtCategoryID.getText());
+                        
+                        selectedVegetable.setCategory(category);
+                        selectedVegetable.setCatagoryID(category.getCatagoryID());
+                        selectedVegetable.setVegetableName(txtVegetableName.getText());
+                        selectedVegetable.setUnit(txtUnit.getText());
+                        selectedVegetable.setAmount((Integer.parseInt(txtAmount.getText())));
+                        selectedVegetable.setPrice(Float.parseFloat(txtPrice.getText()));
+                        selectedVegetable.setImage(txtURL.getText());
+                        
+                        vegetableBLL.addVegetable(selectedVegetable);
+                        vegetableList.set(vegetableIndex, selectedVegetable);
                         
                         JOptionPane.showMessageDialog(menu, "Account edited successfully!" , "Done!",  JOptionPane.INFORMATION_MESSAGE);    
                         Clear();
@@ -343,6 +389,12 @@ public class StockPanel extends JPanel{
         txtPrice.setBackground(Color.WHITE);
     }
     public void Show(){
-    
+        Object[][] table = vegetableBLL.convertList(vegetableList);
+        tableModel.setRowCount(0);
+        
+        for(int i = 0; i < table.length; i++) {
+            tableModel.addRow(table[i]);
+        }
+        tabStock.setModel(tableModel);
     }
 }

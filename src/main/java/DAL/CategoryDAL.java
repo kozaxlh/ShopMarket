@@ -6,6 +6,8 @@ package DAL;
 
 import Entity.Category;
 import java.util.List;
+import javax.persistence.TemporalType;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 
 /**
@@ -35,6 +37,17 @@ public class CategoryDAL {
         
         session.beginTransaction();
         category = session.get(Category.class, CategoryID);
+        session.getTransaction().commit();
+        return category;
+    }
+    
+    public Category getCategory(String CategoryName) {
+        Category category;
+        
+        session.beginTransaction();
+        Query query = session.createQuery("FROM Category WHERE name LIKE :name",Category.class);
+        query.setParameter("name","%" + CategoryName + "%");
+        category = (Category) query.getSingleResult();
         session.getTransaction().commit();
         return category;
     }
