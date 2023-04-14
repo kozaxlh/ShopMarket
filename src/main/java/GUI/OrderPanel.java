@@ -219,4 +219,5 @@ public class OrderPanel extends JPanel{
         }
         tabCustomer.setModel(tableModel);
     }
+
 }
