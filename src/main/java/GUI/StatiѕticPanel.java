@@ -21,11 +21,11 @@ public class StatiѕticPanel extends JPanel{
     
     JLabel labStatistic, labVegetableID, labVegetableName, labCategoryID,
            labUnit, labAmountSale, labPrice, labTotalSale,
-           labDay, labMonth, labYear;
+           labYear, labMonth, labDay;
     JTextField txtVegetableID, txtCategoryID, txtVegetableName, txtUnit, txtAmountSale, txtPrice, txtTotalSale, txtSearch;
     JTable tabStatistic;
     JButton btnClear, btnSearch, btnTotalUp;
-    JComboBox cbbDay, cbbMonth, cbbYear;
+    JComboBox cbbYear, cbbMonth, cbbDay;
     JScrollPane pnlTable;
     DefaultTableModel tableModel;
     MenuScreen menu; 
@@ -80,20 +80,20 @@ public class StatiѕticPanel extends JPanel{
             labTotalSale.setBounds( 50 , 520 , 240 , 30 );
             labTotalSale.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
         
-        labDay = new JLabel("Day");
-            labDay.setForeground(Color.black);
-            labDay.setBounds( 450 , 40 , 240 , 30 );
-            labDay.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
+        labYear = new JLabel("Year");
+            labYear.setForeground(Color.black);
+            labYear.setBounds( 450 , 40 , 240 , 30 );
+            labYear.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
             
         labMonth = new JLabel("Month");
             labMonth.setForeground(Color.black);
-            labMonth.setBounds( 550 , 40 , 240 , 30 );
+            labMonth.setBounds( 600 , 40 , 240 , 30 );
             labMonth.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
         
-        labYear = new JLabel("Year");
-            labYear.setForeground(Color.black);
-            labYear.setBounds( 650 , 40 , 240 , 30 );
-            labYear.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
+        labDay = new JLabel("Day");
+            labDay.setForeground(Color.black);
+            labDay.setBounds( 700 , 40 , 240 , 30 );
+            labDay.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
             
         txtVegetableID = new JTextField();
             txtVegetableID.setBounds( 55 , 70 , 285 , 40 );
@@ -135,30 +135,50 @@ public class StatiѕticPanel extends JPanel{
             txtSearch.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
             txtSearch.setForeground(Color.black);
             
-        cbbDay = new JComboBox();
-            cbbDay.setBounds( 455 , 70 , 50 , 40 );
-            cbbDay.setFont(new Font( "Jaldi" , Font.BOLD , 16 )); 
-            cbbDay.setBackground(Color.WHITE);
-            for(int i = 1; i<=31; i++){
-                cbbDay.addItem(i);
+        cbbYear = new JComboBox();
+            cbbYear.setBounds( 455 , 70 , 100 , 40 );
+            cbbYear.setFont(new Font( "Jaldi" , Font.BOLD , 16 )); 
+            cbbYear.setBackground(Color.WHITE);
+            for(int i = 2000; i<=2500; i++){
+                cbbYear.addItem(i);
             }
             
         cbbMonth = new JComboBox();
-            cbbMonth.setBounds( 555 , 70 , 50 , 40 );
+            cbbMonth.setBounds( 605 , 70 , 50 , 40 );
             cbbMonth.setFont(new Font( "Jaldi" , Font.BOLD , 16 )); 
             cbbMonth.setBackground(Color.WHITE);
             for(int i = 1; i<=12; i++){
                 cbbMonth.addItem(i);
             }
             
-        cbbYear = new JComboBox();
-            cbbYear.setBounds( 655 , 70 , 100 , 40 );
-            cbbYear.setFont(new Font( "Jaldi" , Font.BOLD , 16 )); 
-            cbbYear.setBackground(Color.WHITE);
-            for(int i = 2000; i<=2500; i++){
-                cbbYear.addItem(i);
-            }
-        
+            
+        cbbDay = new JComboBox();
+            cbbDay.setBounds( 705 , 70 , 50 , 40 );
+            cbbDay.setFont(new Font( "Jaldi" , Font.BOLD , 16 )); 
+            cbbDay.setBackground(Color.WHITE);
+            if ((int)cbbMonth.getSelectedItem() == 1 || (int)cbbMonth.getSelectedItem() == 3 ||
+                    (int)cbbMonth.getSelectedItem() == 5 || (int)cbbMonth.getSelectedItem() == 7 ||
+                    (int)cbbMonth.getSelectedItem() == 8 || (int)cbbMonth.getSelectedItem() == 10 ||
+                    (int)cbbMonth.getSelectedItem() == 12){
+                cbbDay.removeAllItems();
+                for(int i = 1; i <= 31; i++)
+                    cbbDay.addItem(i);
+            }else if ((int)cbbMonth.getSelectedItem() == 4 || (int)cbbMonth.getSelectedItem() == 6 ||
+                    (int)cbbMonth.getSelectedItem() == 9 || (int)cbbMonth.getSelectedItem() == 11){
+                cbbDay.removeAllItems();
+                for(int i = 1; i <= 30; i++)
+                    cbbDay.addItem(i);
+            }else if ((int)cbbMonth.getSelectedItem() == 2 && ((int)cbbYear.getSelectedItem()%4)==0){
+                cbbDay.removeAllItems();
+                for(int i = 1; i <= 29; i++)
+                    cbbDay.addItem(i);
+            }else if((int)cbbMonth.getSelectedItem() == 2 && ((int)cbbYear.getSelectedItem()%4)!=0){
+                cbbDay.removeAllItems();
+                for(int i = 1; i <= 28; i++)
+                    cbbDay.addItem(i);
+            }else
+                cbbDay.addItem("chon thang nam");
+            
         btnSearch = new JButton("Search");
             btnSearch.setBackground(Color.black);
             btnSearch.setForeground(Color.WHITE);
@@ -203,9 +223,9 @@ public class StatiѕticPanel extends JPanel{
         this.add(labAmountSale);
         this.add(labPrice);
         this.add(labTotalSale);
-        this.add(labDay);
-        this.add(labMonth);
         this.add(labYear);
+        this.add(labMonth);
+        this.add(labDay);
         this.add(txtUnit);
         this.add(txtVegetableName);
         this.add(txtCategoryID);
@@ -213,9 +233,9 @@ public class StatiѕticPanel extends JPanel{
         this.add(txtPrice);
         this.add(txtTotalSale);
         this.add(txtSearch);
-        this.add(cbbDay);
-        this.add(cbbMonth);
         this.add(cbbYear);
+        this.add(cbbMonth);
+        this.add(cbbDay);
         this.add(btnSearch);
         this.add(btnClear);
         this.add(btnTotalUp);
@@ -235,6 +255,62 @@ public class StatiѕticPanel extends JPanel{
                     }
                 }    
                 });
+        cbbYear.addActionListener(new ActionListener() {
+                @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if ((int)cbbMonth.getSelectedItem() == 1 || (int)cbbMonth.getSelectedItem() == 3 ||
+                            (int)cbbMonth.getSelectedItem() == 5 || (int)cbbMonth.getSelectedItem() == 7 ||
+                            (int)cbbMonth.getSelectedItem() == 8 || (int)cbbMonth.getSelectedItem() == 10 ||
+                            (int)cbbMonth.getSelectedItem() == 12){
+                            cbbDay.removeAllItems();
+                            for(int i = 1; i <= 31; i++)
+                            cbbDay.addItem(i);
+                        }else if ((int)cbbMonth.getSelectedItem() == 4 || (int)cbbMonth.getSelectedItem() == 6 ||
+                                  (int)cbbMonth.getSelectedItem() == 9 || (int)cbbMonth.getSelectedItem() == 11){
+                            cbbDay.removeAllItems();
+                            for(int i = 1; i <= 30; i++)
+                                cbbDay.addItem(i);
+                        }else if ((int)cbbMonth.getSelectedItem() == 2 && ((int)cbbYear.getSelectedItem()%4)==0){
+                            cbbDay.removeAllItems();
+                            for(int i = 1; i <= 29; i++)
+                                cbbDay.addItem(i);
+                        }else if((int)cbbMonth.getSelectedItem() == 2 && ((int)cbbYear.getSelectedItem()%4)!=0){
+                            cbbDay.removeAllItems();
+                            for(int i = 1; i <= 28; i++)
+                                cbbDay.addItem(i);
+                        }else
+                            cbbDay.addItem("chon thang nam");
+                    }
+                });
+        
+        cbbMonth.addActionListener(new ActionListener() {
+                @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if ((int)cbbMonth.getSelectedItem() == 1 || (int)cbbMonth.getSelectedItem() == 3 ||
+                            (int)cbbMonth.getSelectedItem() == 5 || (int)cbbMonth.getSelectedItem() == 7 ||
+                            (int)cbbMonth.getSelectedItem() == 8 || (int)cbbMonth.getSelectedItem() == 10 ||
+                            (int)cbbMonth.getSelectedItem() == 12){
+                            cbbDay.removeAllItems();
+                            for(int i = 1; i <= 31; i++)
+                            cbbDay.addItem(i);
+                        }else if ((int)cbbMonth.getSelectedItem() == 4 || (int)cbbMonth.getSelectedItem() == 6 ||
+                                  (int)cbbMonth.getSelectedItem() == 9 || (int)cbbMonth.getSelectedItem() == 11){
+                            cbbDay.removeAllItems();
+                            for(int i = 1; i <= 30; i++)
+                                cbbDay.addItem(i);
+                        }else if ((int)cbbMonth.getSelectedItem() == 2 && ((int)cbbYear.getSelectedItem()%4)==0){
+                            cbbDay.removeAllItems();
+                            for(int i = 1; i <= 29; i++)
+                                cbbDay.addItem(i);
+                        }else if((int)cbbMonth.getSelectedItem() == 2 && ((int)cbbYear.getSelectedItem()%4)!=0){
+                            cbbDay.removeAllItems();
+                            for(int i = 1; i <= 28; i++)
+                                cbbDay.addItem(i);
+                        }else
+                            cbbDay.addItem("chon thang nam");
+                    }
+                });  
+        
 
             btnClear.addActionListener(new ActionListener() {
                 @Override
