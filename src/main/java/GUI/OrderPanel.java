@@ -3,6 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package GUI;
+import BLL.OrderBLL;
+import Entity.Order;
+import java.util.List;
 import java.awt.*;
 import java.awt.Color;
 import java.awt.Font;
@@ -27,8 +30,13 @@ public class OrderPanel extends JPanel{
     DefaultTableModel tableModel;
     MenuScreen menu;
     
+    OrderBLL orderBLL;
+    List<Order> orderList;
+    
      public OrderPanel(MenuScreen menu){
         super();
+        orderBLL = new OrderBLL();
+        orderList = orderBLL.getOrderList();
         this.menu = menu;
         GUI();
         Show();
@@ -161,7 +169,7 @@ public class OrderPanel extends JPanel{
                     if (row >= 0 ){
                     txtOrderID.setText(Integer.toString((int) tabCustomer.getValueAt(row,0)));
                     txtCustomerID.setText(Integer.toString((int) tabCustomer.getValueAt(row,1)));
-                    txtDate.setText((String)tabCustomer.getValueAt(row,2));
+                    txtDate.setText(tabCustomer.getValueAt(row,2).toString());
                     txtTotal.setText(Integer.toString((int) tabCustomer.getValueAt(row,3)));
                     txtNote.setText((String)tabCustomer.getValueAt(row,4));
                     }
@@ -173,7 +181,8 @@ public class OrderPanel extends JPanel{
                         if ( JOptionPane.showConfirmDialog(menu,"Do you want to create a new order?","Confirm",JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION){
                             return;
                             }
-                        new OrderDetailScreen(menu);
+                        int customerID = Integer.parseInt(txtCustomerID.getText());
+                        new OrderDetailScreen(menu,customerID);
                         menu.setVisible(false);
                     }
             });  
@@ -202,6 +211,12 @@ public class OrderPanel extends JPanel{
         txtNote.setBackground(Color.WHITE);
     }
     public void Show(){
-    
+        Object[][] table = orderBLL.convertOrderList(orderList);
+        tableModel.setRowCount(0);
+        
+        for(int i = 0; i < table.length; i++) {
+            tableModel.addRow(table[i]);
+        }
+        tabCustomer.setModel(tableModel);
     }
 }
