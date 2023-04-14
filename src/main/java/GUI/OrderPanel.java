@@ -3,6 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package GUI;
+import BLL.OrderBLL;
+import Entity.Order;
+import java.util.List;
 import java.awt.*;
 import java.awt.Color;
 import java.awt.Font;
@@ -22,13 +25,18 @@ public class OrderPanel extends JPanel{
            labTotal, labNote;
     JTextField txtOrderID, txtCustomerID, txtDate, txtTotal, txtNote, txtSearch;
     JTable tabCustomer;
-    JButton btnCreate, btnClear, btnSearch, btnDetail;
+    JButton btnCreate, btnClear, btnSearch;
     JScrollPane pnlTable;
     DefaultTableModel tableModel;
     MenuScreen menu;
     
+    OrderBLL orderBLL;
+    List<Order> orderList;
+    
      public OrderPanel(MenuScreen menu){
         super();
+        orderBLL = new OrderBLL();
+        orderList = orderBLL.getOrderList();
         this.menu = menu;
         GUI();
         Show();
@@ -79,7 +87,6 @@ public class OrderPanel extends JPanel{
             txtCustomerID.setBounds( 55 , 150 , 285 , 40 );
             txtCustomerID.setFont(new Font( "Jaldi" , Font.BOLD , 16 ));
             txtCustomerID.setBackground(Color.white);
-            txtCustomerID.setEnabled(false);
             
         txtDate = new JTextField();
             txtDate.setBounds( 55 , 230 , 285 , 40 );
@@ -120,14 +127,6 @@ public class OrderPanel extends JPanel{
             btnCreate.setBounds( 640 , 650 , 150 , 29 );
             btnCreate.setFont(new Font( "Jaldi" , Font.BOLD ,20 ));
             
-        btnDetail = new JButton("Detail");
-            btnDetail.setBackground(Color.black);
-            btnDetail.setForeground(Color.WHITE);
-            btnDetail.setBorder(null);
-            btnDetail.setFocusable(false);
-            btnDetail.setBounds( 480 , 650 , 150 , 29 );
-            btnDetail.setFont(new Font( "Jaldi" , Font.BOLD ,20 ));
-            
         btnClear = new JButton("Clear");
             btnClear.setBackground(Color.black);
             btnClear.setForeground(Color.WHITE);
@@ -158,7 +157,6 @@ public class OrderPanel extends JPanel{
         this.add(txtCustomerID);
         this.add(txtNote);
         this.add(txtSearch);
-        this.add(btnDetail);
         this.add(btnSearch);
         this.add(btnCreate);
         this.add(btnClear);
@@ -171,7 +169,7 @@ public class OrderPanel extends JPanel{
                     if (row >= 0 ){
                     txtOrderID.setText(Integer.toString((int) tabCustomer.getValueAt(row,0)));
                     txtCustomerID.setText(Integer.toString((int) tabCustomer.getValueAt(row,1)));
-                    txtDate.setText((String)tabCustomer.getValueAt(row,2));
+                    txtDate.setText(tabCustomer.getValueAt(row,2).toString());
                     txtTotal.setText(Integer.toString((int) tabCustomer.getValueAt(row,3)));
                     txtNote.setText((String)tabCustomer.getValueAt(row,4));
                     }
@@ -183,24 +181,11 @@ public class OrderPanel extends JPanel{
                         if ( JOptionPane.showConfirmDialog(menu,"Do you want to create a new order?","Confirm",JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION){
                             return;
                             }
-                        new OrderDetailScreen(menu);
+                        int customerID = Integer.parseInt(txtCustomerID.getText());
+                        new OrderDetailScreen(menu,customerID);
                         menu.setVisible(false);
                     }
-            }); 
-        
-        btnDetail.addActionListener(new ActionListener() {
-                @Override
-                    public void actionPerformed(ActionEvent e) {
-                        StringBuilder sb = new StringBuilder();
-                        DataValidator.validateTextEmpty(txtOrderID, sb, "Product ID cannot be blank!");
-                        if (sb.length()>0 ){
-                            JOptionPane.showMessageDialog(menu, sb , "Information is missing!",  JOptionPane.INFORMATION_MESSAGE);
-                            return;
-                        }
-                        new OrderDetailScreen(menu);
-                        menu.setVisible(false);
-                    }
-            });
+            });  
             
             btnClear.addActionListener(new ActionListener() {
                 @Override
@@ -226,6 +211,13 @@ public class OrderPanel extends JPanel{
         txtNote.setBackground(Color.WHITE);
     }
     public void Show(){
-    
+        Object[][] table = orderBLL.convertOrderList(orderList);
+        tableModel.setRowCount(0);
+        
+        for(int i = 0; i < table.length; i++) {
+            tableModel.addRow(table[i]);
+        }
+        tabCustomer.setModel(tableModel);
     }
+
 }

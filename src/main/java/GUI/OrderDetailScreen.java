@@ -4,11 +4,15 @@
  */
 package GUI;
 
+import BLL.CategoryBLL;
+import BLL.VegetableBLL;
+import Entity.Vegetable;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -33,7 +37,13 @@ public class OrderDetailScreen extends JFrame{
     JComboBox cbbSort;
     DefaultTableModel stockTable, orderTable;
     MenuScreen menu;
-    public OrderDetailScreen(MenuScreen menu){
+    
+    VegetableBLL vegetableBLL;
+    CategoryBLL categoryBLL;
+    List<Vegetable> vegetableList;
+    Vegetable selectedVegetable;
+    
+    public OrderDetailScreen(MenuScreen menu, int customerID){
         this.menu = menu;
         this.setPreferredSize(new Dimension(1500,800));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,11 +51,15 @@ public class OrderDetailScreen extends JFrame{
         this.setVisible(true);
         this.setLayout(null);
         
-        GUI();
+        vegetableBLL = new VegetableBLL();
+        vegetableList = vegetableBLL.loadVegetable();
         
+        GUI();
+        ShowVegetable();
         this.pack();
         this.setLocationRelativeTo(null);       
     }
+    
     private void GUI(){
         labOrderDetail = new JLabel("ORDER DETAIL");
             labOrderDetail.setForeground(Color.black);
@@ -300,5 +314,15 @@ public class OrderDetailScreen extends JFrame{
         this.add(pnlStock);
         this.add(pnlOrder);
         this.add(cbbSort);
+    }
+    
+    public void ShowVegetable(){
+        Object[][] table = vegetableBLL.convertList(vegetableList,true);
+        stockTable.setRowCount(0);
+        
+        for(int i = 0; i < table.length; i++) {
+            stockTable.addRow(table[i]);
+        }
+        tabStock.setModel(stockTable);
     }
 }

@@ -389,7 +389,7 @@ public class StockPanel extends JPanel{
         txtPrice.setBackground(Color.WHITE);
     }
     public void Show(){
-        Object[][] table = vegetableBLL.convertList(vegetableList);
+        Object[][] table = vegetableBLL.convertList(vegetableList,false);
         tableModel.setRowCount(0);
         
         for(int i = 0; i < table.length; i++) {
