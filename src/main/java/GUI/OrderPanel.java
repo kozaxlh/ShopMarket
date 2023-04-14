@@ -186,6 +186,27 @@ public class OrderPanel extends JPanel{
                         menu.setVisible(false);
                     }
             });  
+        btnSearch.addActionListener(new ActionListener() {
+                @Override
+                    public void actionPerformed(ActionEvent e) {
+                        ReturnWhite();
+
+                        if ("".equals(txtSearch.getText())){
+                            orderList = orderBLL.getOrderList();
+                            Clear();
+                            Show();
+                            return;
+                        }
+                        
+                        //add code here
+                        Order order = orderBLL.getOrder(Integer.parseInt(txtSearch.getText()));
+                        orderList.clear();
+                        orderList.add(order);
+                          
+                        Clear();
+                        Show();
+                    }
+            });
             
             btnClear.addActionListener(new ActionListener() {
                 @Override
