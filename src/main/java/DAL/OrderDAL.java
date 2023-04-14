@@ -72,7 +72,7 @@ public class OrderDAL {
         Query query = session.createQuery(hql);
 
         query.setParameter("year", date.get(Calendar.YEAR));
-        query.setParameter("month", date.get(Calendar.MONTH) + 1);
+        query.setParameter("month", date.get(Calendar.MONTH));
         query.setParameter("day", date.get(Calendar.DATE));
 
         list = query.list();
