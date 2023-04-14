@@ -281,6 +281,27 @@ public class CustomerPanel extends JPanel{
                         Show();
                     }
             });  
+        btnSearch.addActionListener(new ActionListener() {
+                @Override
+                    public void actionPerformed(ActionEvent e) {
+                        ReturnWhite();
+
+                        if ("".equals(txtSearch.getText())){
+                            customerList = customerBLL.loadCustomers();
+                            Clear();
+                            Show();
+                            return;
+                        }
+                        
+                        //add code here
+                        Customers customer = customerBLL.getCustomer(Integer.parseInt(txtSearch.getText()));
+                        customerList.clear();
+                        customerList.add(customer);
+                          
+                        Clear();
+                        Show();
+                    }
+            });
             
             btnClear.addActionListener(new ActionListener() {
                 @Override
