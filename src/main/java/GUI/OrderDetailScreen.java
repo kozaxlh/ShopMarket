@@ -469,8 +469,13 @@ public class OrderDetailScreen extends JFrame{
                         order.setDate(calendar);
                         order.setNote(txtNote.getText());
                         order.setTotal(Float.parseFloat(txtTotal.getText()));
+                        try {
+                            orderBLL.addOrder(order,orderDetailList);
+                        }
+                        catch(IllegalArgumentException err) {
+                            JOptionPane.showMessageDialog(menu,err.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+                        }
                         
-                        orderBLL.addOrder(order,orderDetailList);
                     
                         menu.setVisible(true);
                         dispose();
