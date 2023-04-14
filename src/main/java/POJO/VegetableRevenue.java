@@ -4,6 +4,7 @@
  */
 package POJO;
 
+import Entity.Vegetable;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -14,27 +15,31 @@ import lombok.Data;
 @Data
 public class VegetableRevenue {
 
-    private String vegetableName;
+    private Vegetable vegetable;
     private long quantity;
-    private float price;
+    private float total;
 
     public VegetableRevenue() {
     }
-
-    public VegetableRevenue(String vegetableName, float price) {
-        this.vegetableName = vegetableName;
-        this.price = price;
+    
+    public VegetableRevenue(Vegetable vegetable) {
+        this.vegetable = vegetable;
     }
 
-    public VegetableRevenue(String vegetableName, double price) {
-        this.vegetableName = vegetableName;
-        this.price = (float) price;
+    public VegetableRevenue(Vegetable vegetable, float total) {
+        this.vegetable = vegetable;
+        this.total = total;
     }
 
-    public VegetableRevenue(String vegetableName, long quantity, double price) {
-        this.vegetableName = vegetableName;
+    public VegetableRevenue(Vegetable vegetable, double total) {
+        this.vegetable = vegetable;
+        this.total = (float) total;
+    }
+
+    public VegetableRevenue(Vegetable vegetable, long quantity, double total) {
+        this.vegetable = vegetable;
         this.quantity = quantity;
-        this.price = (float) price;
+        this.total = (float) total;
     }
     
     

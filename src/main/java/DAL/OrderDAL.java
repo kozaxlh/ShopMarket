@@ -37,6 +37,19 @@ public class OrderDAL {
 
         return orders;
     }
+    
+    public List<Order> getOrderList() {
+        List<Order> orders;
+
+        session.beginTransaction();
+
+        Query query = session.createQuery("FROM Order");
+
+        orders = query.list();
+        session.getTransaction().commit();
+
+        return orders;
+    }
 
     public Order getOrder(int OrderID) {
         Order order;
@@ -52,7 +65,7 @@ public class OrderDAL {
         List list;
 
         session.beginTransaction();
-        String hql = "SELECT new POJO.VegetableRevenue(OD.vegetable.vegetableName, sum(OD.quantity), sum(OD.price)) "
+        String hql = "SELECT new POJO.VegetableRevenue(OD.vegetable, sum(OD.quantity), sum(OD.price)) "
                 + "FROM OrderDetail OD "
                 + "WHERE year(OD.order.date) = :year AND month(OD.order.date) = :month AND day(OD.order.date) = :day "
                 + "GROUP BY OD.vegetable.vegetableID ";
@@ -63,6 +76,7 @@ public class OrderDAL {
         query.setParameter("day", date.get(Calendar.DATE));
 
         list = query.list();
+        session.getTransaction().commit();
 
         return list;
     }
@@ -71,12 +85,13 @@ public class OrderDAL {
         List list;
 
         session.beginTransaction();
-        String hql = "SELECT new POJO.VegetableRevenue(OD.vegetable.vegetableName, sum(OD.quantity), sum(OD.price)) "
+        String hql = "SELECT new POJO.VegetableRevenue(OD.vegetable, sum(OD.quantity), sum(OD.price)) "
                 + "FROM OrderDetail OD "
                 + "GROUP BY OD.vegetable.vegetableID ";
         Query query = session.createQuery(hql);
 
         list = query.list();
+        session.getTransaction().commit();
 
         return list;
     }
