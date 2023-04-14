@@ -4,12 +4,17 @@
  */
 package GUI;
 
+import BLL.OrderBLL;
+import Entity.Vegetable;
+import POJO.VegetableRevenue;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Calendar;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -29,8 +34,11 @@ public class StatiѕticPanel extends JPanel{
     JScrollPane pnlTable;
     DefaultTableModel tableModel;
     MenuScreen menu; 
+    
+    OrderBLL orderBLL;
     public StatiѕticPanel(){
         super();
+        orderBLL = new OrderBLL();
         GUI();
         Show();
     }
@@ -246,12 +254,12 @@ public class StatiѕticPanel extends JPanel{
                     int row = tabStatistic.getSelectedRow();
                     if (row >= 0 ){
                     txtVegetableID.setText(Integer.toString((int) tabStatistic.getValueAt(row,0)));
-                    txtCategoryID.setText(Integer.toString((int) tabStatistic.getValueAt(row,1)));
+                    txtCategoryID.setText((String)tabStatistic.getValueAt(row,1));
                     txtVegetableName.setText((String)tabStatistic.getValueAt(row,2));
                     txtUnit.setText((String)tabStatistic.getValueAt(row,3));
-                    txtAmountSale.setText(Integer.toString((int) tabStatistic.getValueAt(row,4)));
-                    txtPrice.setText(Integer.toString((int) tabStatistic.getValueAt(row,5)));
-                    txtTotalSale.setText(Integer.toString((int) tabStatistic.getValueAt(row,6)));
+                    txtAmountSale.setText(Long.toString((long) tabStatistic.getValueAt(row,4)));
+                    txtPrice.setText(Float.toString((float) tabStatistic.getValueAt(row,5)));
+                    txtTotalSale.setText(Float.toString((float) tabStatistic.getValueAt(row,6)));
                     }
                 }    
                 });
@@ -318,6 +326,20 @@ public class StatiѕticPanel extends JPanel{
                         Clear();
                         JOptionPane.showMessageDialog(menu, "All input fields have been refreshed.");
                     }
+            });
+            
+            btnTotalUp.addActionListener(new ActionListener() {
+                @Override
+                    public void actionPerformed(ActionEvent e) {
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set((int)cbbYear.getSelectedItem(),(int)cbbMonth.getSelectedItem(),(int)cbbDay.getSelectedItem());
+                        
+                        Show(calendar);
+                        
+                        if(tabStatistic.getRowCount() == 0) {
+                            JOptionPane.showMessageDialog(menu, "Khong co du lieu san pham vao ngay nay");
+                        }
+                    }
             });  
             
     }
@@ -338,6 +360,22 @@ public class StatiѕticPanel extends JPanel{
 //        txtAmountSale.setBackground(Color.WHITE);
 //    }
     public void Show(){
+        Object[][] table = orderBLL.convertVegetableRevenue();
+        tableModel.setRowCount(0);
+        
+        for(int i = 0; i < table.length; i++) {
+            tableModel.addRow(table[i]);
+        }
+        tabStatistic.setModel(tableModel);
+    }
     
+    public void Show(Calendar date) {
+        Object[][] table = orderBLL.convertVegetableRevenue(date);
+        tableModel.setRowCount(0);
+        
+        for(int i = 0; i < table.length; i++) {
+            tableModel.addRow(table[i]);
+        }
+        tabStatistic.setModel(tableModel);
     }
 }
