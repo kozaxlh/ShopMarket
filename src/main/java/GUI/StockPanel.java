@@ -346,6 +346,27 @@ public class StockPanel extends JPanel{
                         Show();
                     }
             });  
+        btnSearch.addActionListener(new ActionListener() {
+                @Override
+                    public void actionPerformed(ActionEvent e) {
+                        ReturnWhite();
+
+                        if ("".equals(txtSearch.getText())){
+                            vegetableList = vegetableBLL.loadVegetable();
+                            Clear();
+                            Show();
+                            return;
+                        }
+                        
+                        //add code here
+                        Vegetable vegetable = vegetableBLL.getVegetable(Integer.parseInt(txtSearch.getText()));
+                        vegetableList.clear();
+                        vegetableList.add(vegetable);
+                          
+                        Clear();
+                        Show();
+                    }
+            });
             
             btnClear.addActionListener(new ActionListener() {
                 @Override

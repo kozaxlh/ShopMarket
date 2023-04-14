@@ -280,7 +280,26 @@ public class OrderDetailScreen extends JFrame{
                         menu.setVisible(true);
                         dispose();
                     }
-            });    
+            });  
+        
+        btnSearch.addActionListener(new ActionListener() {
+                @Override
+                    public void actionPerformed(ActionEvent e) {
+
+                        if ("".equals(txtSearch.getText())){
+                            vegetableList = vegetableBLL.loadVegetable();
+                            ShowVegetable();
+                            return;
+                        }
+                        
+                        //add code here
+                        Vegetable vegetable = vegetableBLL.getVegetable(Integer.parseInt(txtSearch.getText()));
+                        vegetableList.clear();
+                        vegetableList.add(vegetable);
+                          
+                        ShowVegetable();
+                    }
+            });
             
         this.add(labOrderDetail);
         this.add(labVegetableID);
