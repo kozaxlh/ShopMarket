@@ -170,7 +170,7 @@ public class OrderPanel extends JPanel{
                     txtOrderID.setText(Integer.toString((int) tabCustomer.getValueAt(row,0)));
                     txtCustomerID.setText(Integer.toString((int) tabCustomer.getValueAt(row,1)));
                     txtDate.setText(tabCustomer.getValueAt(row,2).toString());
-                    txtTotal.setText(Integer.toString((int) tabCustomer.getValueAt(row,3)));
+                    txtTotal.setText(Float.toString((float) tabCustomer.getValueAt(row,3)));
                     txtNote.setText((String)tabCustomer.getValueAt(row,4));
                     }
                 }    
@@ -181,32 +181,17 @@ public class OrderPanel extends JPanel{
                         if ( JOptionPane.showConfirmDialog(menu,"Do you want to create a new order?","Confirm",JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION){
                             return;
                             }
+                        StringBuilder sb = new StringBuilder();
+                        DataValidator.validateTextEmpty(txtCustomerID, sb, "Please type Customer ID!" );
+                        if (sb.length() > 0){
+                            JOptionPane.showMessageDialog(menu, sb.toString() , "Information is missing!",  JOptionPane.INFORMATION_MESSAGE);
+                            return;
+                        }
                         int customerID = Integer.parseInt(txtCustomerID.getText());
                         new OrderDetailScreen(menu,customerID);
                         menu.setVisible(false);
                     }
             });  
-        btnSearch.addActionListener(new ActionListener() {
-                @Override
-                    public void actionPerformed(ActionEvent e) {
-                        ReturnWhite();
-
-                        if ("".equals(txtSearch.getText())){
-                            orderList = orderBLL.getOrderList();
-                            Clear();
-                            Show();
-                            return;
-                        }
-                        
-                        //add code here
-                        Order order = orderBLL.getOrder(Integer.parseInt(txtSearch.getText()));
-                        orderList.clear();
-                        orderList.add(order);
-                          
-                        Clear();
-                        Show();
-                    }
-            });
             
             btnClear.addActionListener(new ActionListener() {
                 @Override
