@@ -7,6 +7,7 @@ package BLL;
 import DAL.OrderDAL;
 import Entity.Order;
 import Entity.OrderDetail;
+import Entity.Vegetable;
 import POJO.VegetableRevenue;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -84,17 +85,16 @@ public class OrderBLL {
     public Order getOrder(int orderID) {
         return orderDAL.getOrder(orderID);
     }
+    
+    public Order getOrder() {
+        return orderDAL.getOrder();
+    }
 
     public List<Order> getOrderList() {
         return orderDAL.getOrderList();
     }
 
-    public void addOrder(Order order, List<OrderDetail> list) {
-        float total = 0;
-        for (var item : list) {
-            total += item.getPrice();
-        }
-        order.setTotal(total);
+    public void addOrder(Order order, List<OrderDetail> list) throws IllegalArgumentException {
         orderDAL.addOrder(order);
         addOrderDetail(list);
     }
@@ -115,9 +115,21 @@ public class OrderBLL {
         orderDAL.addOrderDetail(orderDetail);
     }
 
-    public void addOrderDetail(List<OrderDetail> list) {
+    public void addOrderDetail(List<OrderDetail> list) throws IllegalArgumentException {
+        int lastID = getOrder().getOrderID();
+        VegetableBLL vegetableBLL = new VegetableBLL();
         for (var item : list) {
+            Vegetable vegetable = vegetableBLL.getVegetable(item.getOrderdetailPK().getVegetableID());
+            if(vegetable.getAmount() - item.getQuantity() < 0) {
+                deleteOrder(getOrder());
+                throw new IllegalArgumentException("Not enough products to sell");
+            }
+            
+            item.getOrderdetailPK().setOrderID(lastID);
             orderDAL.addOrderDetail(item);
+          
+            vegetable.setAmount(vegetable.getAmount() - item.getQuantity());
+            vegetableBLL.updateVegetable(vegetable);
         }
     }
 

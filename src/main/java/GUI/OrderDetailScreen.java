@@ -5,9 +5,9 @@
 package GUI;
 
 import BLL.CategoryBLL;
+import BLL.OrderBLL;
 import BLL.VegetableBLL;
-import Entity.Category;
-import Entity.Vegetable;
+import Entity.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -17,6 +17,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javax.swing.JButton;
@@ -49,10 +50,15 @@ public class OrderDetailScreen extends JFrame{
     
     VegetableBLL vegetableBLL;
     CategoryBLL categoryBLL;
+    OrderBLL orderBLL;
+    List<OrderDetail> orderDetailList;
     List<Vegetable> vegetableList;
     List<Category> categoryList;
     Vegetable selectedVegetable; 
     Object[][] category;
+    Customers customer;
+    
+    int selectedOrderDetail;
     
     public OrderDetailScreen(MenuScreen menu, int customerID){
         this.menu = menu;
@@ -66,7 +72,10 @@ public class OrderDetailScreen extends JFrame{
         vegetableList = vegetableBLL.loadVegetable();
         categoryBLL = new CategoryBLL();
         categoryList = categoryBLL.loadCategory();
+        orderBLL = new OrderBLL();
+        orderDetailList = new ArrayList<OrderDetail>();
         category = categoryBLL.convertList(categoryList);
+        customer = new Customers(customerID);
         
         GUI();
         ShowVegetable();
@@ -329,6 +338,7 @@ public class OrderDetailScreen extends JFrame{
                     btnAdd.setEnabled(false);
                     btnEdit.setEnabled(true);
                     btnDelete.setEnabled(true);
+                    selectedOrderDetail = tabOrder.getSelectedRow();
                     int row = tabOrder.getSelectedRow();
                     if (row >= 0 ){
                     txtVegetableID.setText(Integer.toString((int) tabOrder.getValueAt(row,0)));
@@ -374,6 +384,7 @@ public class OrderDetailScreen extends JFrame{
                         int Amount = Integer.parseInt(txtAmount.getText());
                         float Price = Float.parseFloat(txtPrice.getText());
                         float TotalPrice = Float.parseFloat(txtTotalPrice.getText());
+                        OrderDetail item;
                         if ( tabOrder.getRowCount() != 0){ 
                             boolean flag = true;
                             for (int i = 0; i < tabOrder.getRowCount(); i++){
@@ -385,11 +396,14 @@ public class OrderDetailScreen extends JFrame{
                             }
                                 if (flag){
                                     orderTable.addRow(new Object[]{VegetableID, Category, VegetableName, Unit, Amount, Price, TotalPrice});
-
+                                    item = new OrderDetail(-1,VegetableID,(short)Amount,TotalPrice);
+                                    orderDetailList.add(item);
                                 }
                             
                         }else{
                             orderTable.addRow(new Object[]{VegetableID, Category, VegetableName, Unit, Amount, Price, TotalPrice});
+                            item = new OrderDetail(-1,VegetableID,(short)Amount,TotalPrice);
+                            orderDetailList.add(item);
                         }
                         calTotal();
                     }
@@ -406,6 +420,11 @@ public class OrderDetailScreen extends JFrame{
                                 break;
                             }
                         }
+                        
+                        OrderDetail item = orderDetailList.get(selectedOrderDetail);
+                        item.setQuantity((short)Integer.parseInt(txtAmount.getText()));
+                        item.setPrice(Float.parseFloat(txtTotalPrice.getText()));
+                        
                         calTotal();
                     }
             });    
@@ -420,6 +439,8 @@ public class OrderDetailScreen extends JFrame{
                                 break;
                             }
                         }
+                        orderDetailList.remove(selectedOrderDetail);
+                        
                         calTotal();
                     }
             });
@@ -443,11 +464,52 @@ public class OrderDetailScreen extends JFrame{
                             }
                         
                         //add code here
+                        Order order = new Order();
+                        order.setCustomerID(customer);
+                        order.setDate(calendar);
+                        order.setNote(txtNote.getText());
+                        order.setTotal(Float.parseFloat(txtTotal.getText()));
+                        try {
+                            orderBLL.addOrder(order,orderDetailList);
+                        }
+                        catch(IllegalArgumentException err) {
+                            JOptionPane.showMessageDialog(menu,err.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+                        }
                         
+                    
                         menu.setVisible(true);
                         dispose();
                     }
             });  
+        
+        btnSearch.addActionListener(new ActionListener() {
+                @Override
+                    public void actionPerformed(ActionEvent e) {
+
+                        if ("".equals(txtSearch.getText())){
+                            vegetableList = vegetableBLL.loadVegetable();
+                            ShowVegetable();
+                            return;
+                        }
+                        
+                        //add code here
+                        Vegetable vegetable = vegetableBLL.getVegetable(Integer.parseInt(txtSearch.getText()));
+                        vegetableList.clear();
+                        vegetableList.add(vegetable);
+                          
+                        ShowVegetable();
+                    }
+            });
+        
+        btnSort.addActionListener(new ActionListener() {
+                @Override
+                    public void actionPerformed(ActionEvent e) {
+                        Category item = categoryList.get(cbbSort.getSelectedIndex());
+                        vegetableList = vegetableBLL.loadVegetableInCategory(item);
+                          
+                        ShowVegetable();
+                    }
+            });
             
         this.add(labOrderDetail);
         this.add(labVegetableID);
@@ -486,7 +548,7 @@ public class OrderDetailScreen extends JFrame{
     }
     
     public void ShowVegetable(){
-        Object[][] table = vegetableBLL.convertList(vegetableList,false);
+        Object[][] table = vegetableBLL.convertList(vegetableList);
         stockTable.setRowCount(0);
         
         for(int i = 0; i < table.length; i++) {
@@ -501,6 +563,10 @@ public class OrderDetailScreen extends JFrame{
             total = total + (float)orderTable.getValueAt(i, 6); 
         }
         txtTotal.setText(Float.toString(total));
+    }
+    
+    private void showOrder() {
+        orderDetailList.forEach(System.out::println);
     }
     
     class CustomKeyListener implements KeyListener {

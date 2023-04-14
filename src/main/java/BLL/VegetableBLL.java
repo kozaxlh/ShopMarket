@@ -29,7 +29,7 @@ public class VegetableBLL {
         return vegetableDAL.getVegetableInCategory(category.getCatagoryID());
     }
 
-    private Object[][] convertList(List<Vegetable> list) {
+    public Object[][] convertList(List<Vegetable> list) {
         int rows = list.size();
         int cols = 6;
         Object[][] obj = new Object[rows][cols];
@@ -42,23 +42,6 @@ public class VegetableBLL {
             obj[i][5] = list.get(i).getPrice();
         }
         return obj;
-    }
-
-    public Object[][] convertList(List<Vegetable> list, boolean isDetailForm) {
-        if (isDetailForm) {
-            int rows = list.size();
-            int cols = 5;
-            Object[][] obj = new Object[rows][cols];
-            for (int i = 0; i < rows; i++) {
-                obj[i][0] = list.get(i).getVegetableID();
-                obj[i][1] = list.get(i).getCategory().getCatagoryID();
-                obj[i][2] = list.get(i).getVegetableName();
-                obj[i][3] = list.get(i).getUnit();
-                obj[i][4] = list.get(i).getAmount();
-            }
-            return obj;
-        }
-        return convertList(list);
     }
 
     public void addVegetable(Vegetable vegetable) {
