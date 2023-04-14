@@ -60,6 +60,18 @@ public class OrderDAL {
 
         return order;
     }
+    
+    public Order getOrder() {
+        Order order;
+
+        session.beginTransaction();
+        int lastID = (Integer) session.createSQLQuery("SELECT max(O.orderID) FROM Shopmarket.Order O").uniqueResult();
+        
+        session.getTransaction().commit();
+        order = getOrder(lastID);
+
+        return order;
+    }
 
     public List getVegetableRevenue(Calendar date) {
         List list;
@@ -134,24 +146,17 @@ public class OrderDAL {
 
     public static void main(String[] args) {
         OrderDAL dal = new OrderDAL();
-        List<Order> list = dal.getOrderInCustomer(1);
-        
-        list.forEach(System.out::println);
 
         Order order = new Order();
         Calendar date = Calendar.getInstance();
-        date.set(2023, 5, 23);
+        date.set(2023, 2,13 );
 
         order.setDate(date);
         order.setCustomerID(new Customers(1));
         order.setTotal(0);
-        order.setNote("Hello2");
+        order.setNote("Hello Everyone");
         
-        list.add(order);
         dal.addOrder(order);
-        
-        dal.deleteOrder(order);
-        
-
+        dal.getOrder();
     }
 }

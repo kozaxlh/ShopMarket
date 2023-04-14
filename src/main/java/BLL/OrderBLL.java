@@ -84,6 +84,10 @@ public class OrderBLL {
     public Order getOrder(int orderID) {
         return orderDAL.getOrder(orderID);
     }
+    
+    public Order getOrder() {
+        return orderDAL.getOrder();
+    }
 
     public List<Order> getOrderList() {
         return orderDAL.getOrderList();
