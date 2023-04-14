@@ -5,6 +5,7 @@
 package BLL;
 
 import DAL.VegetableDAL;
+import Entity.Category;
 import Entity.Vegetable;
 import java.util.List;
 
@@ -22,6 +23,10 @@ public class VegetableBLL {
 
     public List<Vegetable> loadVegetable() {
         return vegetableDAL.getVegetableList();
+    }
+    
+    public List<Vegetable> loadVegetableInCategory(Category category) {
+        return vegetableDAL.getVegetableInCategory(category.getCatagoryID());
     }
 
     private Object[][] convertList(List<Vegetable> list) {
@@ -46,7 +51,7 @@ public class VegetableBLL {
             Object[][] obj = new Object[rows][cols];
             for (int i = 0; i < rows; i++) {
                 obj[i][0] = list.get(i).getVegetableID();
-                obj[i][1] = list.get(i).getCategory().getName();
+                obj[i][1] = list.get(i).getCategory().getCatagoryID();
                 obj[i][2] = list.get(i).getVegetableName();
                 obj[i][3] = list.get(i).getUnit();
                 obj[i][4] = list.get(i).getAmount();
